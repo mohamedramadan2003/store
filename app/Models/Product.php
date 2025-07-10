@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable =  ['name','price'];
+    protected $fillable =  ['name','price' ,'slug', 'discount','image'];
     public $timestamps = false;
 
     public function scopeFilter(Builder $builder , $filter)  {
@@ -29,6 +30,19 @@ class Product extends Model
           $builder->when($option['price'] , function($builder , $value)
         {
             $builder->where('price',$value);
+        });
+    }
+     protected static function booted()
+    {
+        static::creating(function ($product) {
+            $product->slug = Str::slug($product->name);
+
+            $original = $product->slug;
+            $count = 1;
+
+            while (Product::where('slug', $product->slug)->exists()) {
+                $product->slug = $original . '-' . $count++;
+            }
         });
     }
 
