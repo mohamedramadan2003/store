@@ -11,3 +11,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 Route::get('/home', [HomeController::class , 'index']);
 Route::apiResource( '/products', ProductController::class);
+Route::get('/products/{slug}', [ProductController::class, 'show']);
+
