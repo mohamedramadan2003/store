@@ -22,8 +22,8 @@ class StoreTokenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required','email:dns','unique:users,email'],
-            'password' => ['required','password','min:6'],
+            'email' => ['required','email:dns'],
+            'password' => ['required','min:6'],
             'device_name' => ['string','max:255'],
         ];
     }

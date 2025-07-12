@@ -11,9 +11,7 @@ use GuzzleHttp\Psr7\Response;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+ 
     public function index(Request $request)
     {
         return Product::filter($request->query())->paginate(5);

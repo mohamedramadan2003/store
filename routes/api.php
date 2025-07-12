@@ -11,7 +11,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 Route::get('/home', [HomeController::class , 'index']);
-Route::apiResource( '/products', ProductController::class);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('products', ProductController::class)->except(['index', 'show']);
+});
 Route::get('/products/{slug}', [ProductController::class, 'show']);
 
 Route::post('/auth-access-token' , [AccessTokenController::class , 'store'])

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTokenRequest;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AccessTokenController extends Controller
@@ -28,5 +29,9 @@ class AccessTokenController extends Controller
             'error'=> 'invaled Auth',
         ],401);
 
+    }
+    public function destroy($token)
+    {
+        $user = Auth::guard('sanctum')->user();
     }
 }
