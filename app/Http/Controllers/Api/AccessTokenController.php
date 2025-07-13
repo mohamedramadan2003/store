@@ -9,6 +9,7 @@ use App\Http\Requests\StoreTokenRequest;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AccessTokenController extends Controller
 {
@@ -30,8 +31,19 @@ class AccessTokenController extends Controller
         ],401);
 
     }
-    public function destroy($token)
+    public function destroy($token = null)
     {
         $user = Auth::guard('sanctum')->user();
+        if( $user && $user->currentAccessToken())
+        {
+           // $user->tokens()->delete(); مسح كل التوكن
+            $user->currentAccessToken()->delete();// مسح توكن الحالي بس
+            return response()->json(204);
+       }
+        $personToken = PersonalAccessToken::findToken($token);
+        if($user->id == $personToken->tokenable_id && get_class($user) == $personToken->tokenable_type)
+    {
+        $personToken->delete();
+    }
     }
 }

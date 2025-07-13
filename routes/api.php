@@ -12,10 +12,13 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 Route::get('/home', [HomeController::class , 'index']);
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('products', ProductController::class)->except(['index', 'show']);
+ Route::apiResource('products', ProductController::class)->except(['index', 'show']);
+
 });
 Route::get('/products/{slug}', [ProductController::class, 'show']);
 
 Route::post('/auth-access-token' , [AccessTokenController::class , 'store'])
 ->middleware('guest:sanctum');
+ Route::delete('/logout/{token?}', [AccessTokenController::class, 'destroy'])
+ ->middleware('auth:sanctum');
 
