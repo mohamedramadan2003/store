@@ -11,10 +11,17 @@ use GuzzleHttp\Psr7\Response;
 
 class ProductController extends Controller
 {
- 
+
     public function index(Request $request)
     {
-        return Product::filter($request->query())->paginate(5);
+        $product = Product::filter($request->query())->paginate(5);
+        if(!$product)
+        {
+            return response()->json([
+                'massage' => 'لا يوجد منتجات الان '
+            ]);
+        }
+        return $product ;
     }
 
     /**
