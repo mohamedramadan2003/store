@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('slug')->unique();
              $table->decimal('discount', 8, 2)->default(0);
             $table->decimal('price',2);
+            $table->unsignedBigInteger('catogy_id');
+            $table->foreign('catogry')->references('id')->on('catogries')->cascadeOnDelete();
         });
     }
 
