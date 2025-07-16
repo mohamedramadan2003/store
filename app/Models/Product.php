@@ -12,7 +12,10 @@ class Product extends Model
     use HasFactory;
     protected $fillable =  ['name','price' ,'slug', 'discount','image'];
     public $timestamps = false;
-
+    public function scopeproduct($query)
+    {
+        Product::get();
+    }
     public function scopeFilter(Builder $builder , $filter)  {
        $option = array_merge([
             'id' => null,

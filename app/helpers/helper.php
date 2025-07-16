@@ -6,3 +6,8 @@ use Illuminate\Support\Facades\Auth;
 {
     return Auth::user()->name ;
 }
+function id()
+{
+    return Auth::user()->id ;
+}
+
