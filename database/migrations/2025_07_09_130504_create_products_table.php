@@ -19,7 +19,7 @@ return new class extends Migration
              $table->decimal('discount', 8, 2)->default(0);
             $table->decimal('price',2);
             $table->unsignedBigInteger('catogy_id');
-            $table->foreign('catogry')->references('id')->on('catogries')->cascadeOnDelete();
+            $table->foreign('catogry_id')->references('id')->on('catogries')->cascadeOnDelete();
         });
     }
 
