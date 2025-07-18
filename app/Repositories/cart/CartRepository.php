@@ -11,5 +11,5 @@ interface CartRepository
     public function update(Product $product , $quantity = 1);
     public function delete(Product $product);
     public function empty();
-    public function total();
+    public function total():float;
 }

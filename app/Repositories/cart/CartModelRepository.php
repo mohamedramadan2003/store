@@ -4,19 +4,21 @@ namespace App\Repositories\Cart;
 
 use App\Models\Cart;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class CartModelRepository implements CartRepository
 {
     public function get(): \Ramsey\Collection\Collection
     {
-        return Cart::get();
+        return Cart::where('cookie_id' ,'=' , $this->getCookieId())->get();
     }
     public function add(Product $product , $quantity  = 1)
     {
         return Cart::create([
-            'cookie_id' => Str::uuid(),
+            'cookie_id' => $this->getCookieId(),
             'user_id' => Auth::id() ,
             'product_id' => $product->id ,
             'quantity' => $quantity ,
@@ -24,7 +26,37 @@ class CartModelRepository implements CartRepository
     }
     public function update(Product $product , $quantity = 1)
     {
-        
+        Cart::where('product_id' , $product->id)
+        ->where('cookie_id' , '=' , $this->getCookieId())
+        ->update([
+            'quantity' => $quantity,
+        ]);
     }
-
+    public function delete(Product $product)
+    {
+        Cart::where('product_id',$product->id)
+        ->where('cookie_id' , '=' , $this->getCookieId())
+        ->delete();
+    }
+    public function empty()
+    {
+        Cart::where('cookie_id' , '=' , $this->getCookieId())->destroy();
+    }
+    public function total() :float
+    {
+       return Cart::where('cookie_id' , '=' , $this->getCookieId())
+        ->join('products' , 'products.id' , '=' , 'carts.product_id')
+        ->selectRaw('SUM(products.price * carts.quantity) as total')
+        ->value('total');
+    }
+    protected function getCookieId()
+    {
+        $cooke_id = Cookie::get('cart_id');
+        if($cooke_id)
+        {
+           $cooke_id =  Str::uuid();
+           Cookie::queue('cart_id',$cooke_id ,Carbon::now()->addDays(30));
+        }
+        return $cooke_id ;
+    }
 }
