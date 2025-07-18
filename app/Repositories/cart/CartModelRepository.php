@@ -2,18 +2,21 @@
 
 namespace App\Repositories\Cart;
 
+use Carbon\Carbon;
 use App\Models\Cart;
 use App\Models\Product;
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Database\Eloquent\Collection;
 
 class CartModelRepository implements CartRepository
 {
-    public function get(): \Ramsey\Collection\Collection
+    public function get(): Collection
     {
-        return Cart::where('cookie_id' ,'=' , $this->getCookieId())->get();
+        return Cart::with('product')
+        ->where('cookie_id' ,'=' , $this->getCookieId())
+        ->get();
     }
     public function add(Product $product , $quantity  = 1)
     {
@@ -32,9 +35,9 @@ class CartModelRepository implements CartRepository
             'quantity' => $quantity,
         ]);
     }
-    public function delete(Product $product)
+    public function delete($id)
     {
-        Cart::where('product_id',$product->id)
+        Cart::where('product_id',$id)
         ->where('cookie_id' , '=' , $this->getCookieId())
         ->delete();
     }
@@ -55,7 +58,7 @@ class CartModelRepository implements CartRepository
         if($cooke_id)
         {
            $cooke_id =  Str::uuid();
-           Cookie::queue('cart_id',$cooke_id ,Carbon::now()->addDays(30));
+           Cookie::queue('cart_id',$cooke_id , 30 * 24 * 60);
         }
         return $cooke_id ;
     }

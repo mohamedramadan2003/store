@@ -5,30 +5,34 @@ namespace App\Http\Controllers\Font;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCartRequest;
+use App\Models\Cart;
 use App\Models\Product;
 use App\Repositories\Cart\CartModelRepository;
+use App\Repositories\Cart\CartRepository;
+use Illuminate\Support\Facades\App;
 
 class CartController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(CartRepository $cart)
     {
-        $repository = new CartModelRepository();
-       $data = $repository->get();
+       $data = $cart->get();
         return response()->json($data);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCartRequest $request)
+    public function store(StoreCartRequest $request , CartRepository $cart)
     {
         $validated = $request->validated();
         $product = Product::findOrFail($request->post('product_id'));
-        $repository = new CartModelRepository();
-        $data = $repository->add($product ,$request->post('quantity') );
+        $data = $cart->add($product ,$request->post('quantity') );
+        return response()->json(
+            ['massage' => 'done' ,$data],200
+        );
     }
 
     /**
@@ -36,25 +40,30 @@ class CartController extends Controller
      */
     public function show(string $id)
     {
-        //
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request , CartRepository $cart)
     {
                 $validated = $request->validated();
         $product = Product::findOrFail($request->post('product_id'));
-        $repository = new CartModelRepository();
-        $data = $repository->update($product ,$request->post('quantity') );
+        $data = $cart->update($product ,$request->post('quantity') );
+        return response()->json(
+            ['massage' => 'done' , $data],200
+        );
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(CartRepository $cart ,$id)
     {
-        //
+        $data = $cart->delete($id);
+        return response()->json(
+            ['massage' => 'done'],200
+        );
     }
 }
