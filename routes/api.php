@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AccessTokenController;
+use App\Http\Controllers\Font\CartController;
 use Illuminate\Http\Request;
 use App\Http\Resources\HomeResource;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,7 @@ Route::get('/home', [HomeController::class , 'index']);
 Route::middleware('auth:sanctum')->group(function () {
  Route::apiResource('products', ProductController::class)->except(['index', 'show']);
 
+ Route::apiResource('carts',CartController::class);
 });
 Route::get('/products/{slug}', [ProductController::class, 'show']);
 

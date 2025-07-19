@@ -13,29 +13,35 @@ use Illuminate\Support\Facades\App;
 
 class CartController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(CartRepository $cart)
+    protected $cart ;
+        public function __construct(CartRepository $cart)
     {
-       $data = $cart->get();
-        return response()->json($data);
+        $this->cart = $cart ;
+    }
+    public function index()
+    {
+       $data = $this->cart->get();
+       if($data)
+       {
+            return response()->json([
+                'massage' => 'لا يوجد منتجات في السلة'
+            ]);
+       }
+        return response()->json($data ,200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCartRequest $request , CartRepository $cart)
+
+    public function store(StoreCartRequest $request)
     {
         $validated = $request->validated();
         $product = Product::findOrFail($request->post('product_id'));
-        $data = $cart->add($product ,$request->post('quantity') );
+        $data = $this->cart->add($product ,$request->post('quantity') );
         return response()->json(
             ['massage' => 'done' ,$data],200
         );
     }
 
-    /**
+    /** 
      * Display the specified resource.
      */
     public function show(string $id)
@@ -46,11 +52,11 @@ class CartController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request , CartRepository $cart)
+    public function update(Request $request)
     {
                 $validated = $request->validated();
         $product = Product::findOrFail($request->post('product_id'));
-        $data = $cart->update($product ,$request->post('quantity') );
+        $data = $this->cart->update($product ,$request->post('quantity') );
         return response()->json(
             ['massage' => 'done' , $data],200
         );
@@ -59,9 +65,9 @@ class CartController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CartRepository $cart ,$id)
+    public function destroy($id)
     {
-        $data = $cart->delete($id);
+        $data = $this->cart->delete($id);
         return response()->json(
             ['massage' => 'done'],200
         );
