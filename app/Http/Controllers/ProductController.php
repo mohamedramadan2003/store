@@ -14,7 +14,7 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $product = Product::filter($request->query())->paginate(5);
+        $product = Product::get();
         if(!$product)
         {
             return response()->json([
