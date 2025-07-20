@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use App\Observers\CartObserver;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Observers\CartObserver;
 use PhpParser\Node\Stmt\Static_;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Cart extends Model
 {
@@ -18,13 +20,27 @@ class Cart extends Model
     //creating , created , updating , updated , saving ,saved
     //deleting , deleted , restoring , restored , retrieved
 
-    protected static function booted()  // دي بتعمل حدث اول ما اضيف بيانات يضيف id ده
+    public static function booted()  // دي بتعمل حدث اول ما اضيف بيانات يضيف id ده
     {
         static::observe(CartObserver::class);
+        static::addGlobalScope('cookie_id',function(Builder $builder)
+        {
+            $builder->where('cookie_id' , Cart::getCookieId());
+        });
         /*static::creating(function(Cart $cart)
         {
             $cart->id = Str::uuid();
         });*/
+    }
+      public static function getCookieId()
+    {
+        $cooke_id = Cookie::get('cart_id');
+        if(!$cooke_id)
+        {
+           $cooke_id =  Str::uuid()->toString();
+           Cookie::queue('cart_id',$cooke_id , 30 * 24 * 60);
+        }
+        return $cooke_id ;
     }
     public function user()
     {
