@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-use GuzzleHttp\Psr7\Response;
+use App\Notifications\CreateProductNotification;
 
 class ProductController extends Controller
 {
@@ -30,13 +32,20 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
             $validated = $request->validated();
+            $user = Auth::guard('sanctum')->user();
             $validated['slug'] = Str::slug($validated['name']);
             if ($request->hasFile('image')) {
                     $imagePath = $request->file('image')->store('products', 'public');
                     $validated['image'] = $imagePath;
                                                  }
             $product =  Product::create($validated);
-             return response()->json($product, 201);
+            $no = $user->notify(new CreateProductNotification($product));
+             return response()->json([
+                'massage' => 'notification done ',
+               'notifications'=> $user->notifications()->latest()->first(),
+             'product'=>$product
+             ]
+                , 201);
 
     }
 

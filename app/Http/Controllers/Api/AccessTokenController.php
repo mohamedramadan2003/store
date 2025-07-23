@@ -36,9 +36,9 @@ class AccessTokenController extends Controller
         $user = Auth::guard('sanctum')->user();
         if( $user && $user->currentAccessToken())
         {
-           // $user->tokens()->delete(); مسح كل التوكن
+           // $user->tokens()->delete();// مسح كل التوكن
             $user->currentAccessToken()->delete();// مسح توكن الحالي بس
-            return response()->json(204);
+            return response()->json(['msg' => 'delete done']);
        }
         $personToken = PersonalAccessToken::findToken($token);
         if($user->id == $personToken->tokenable_id && get_class($user) == $personToken->tokenable_type)
