@@ -4,7 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTokenRequest extends FormRequest
+use function Laravel\Prompts\confirm;
+
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +25,8 @@ class StoreTokenRequest extends FormRequest
     {
         return [
             'email' => ['required','email'],
-            'password' => ['required','min:6'],
-            'device_name' => ['string','max:255'],
+            'name' => ['required' , 'string' , 'alpha'],
+            'password' => ['required' , 'string'],
         ];
     }
 }

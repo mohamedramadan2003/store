@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\StoreTokenRequest;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,19 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class AccessTokenController extends Controller
 {
+
+    public function register(RegisterRequest $request)
+    {
+        $validated = $request->validated();
+       $user = User::create($request->all());
+        Auth::login($user);
+        $device_name = $request->post('device_name', $request->userAgent());
+            $token = $user->createToken($device_name);
+             return Response()->json([
+                'token' => $token->plainTextToken ,
+                $user
+            ],201);
+        }
     public function store(StoreTokenRequest $request)
     {
         $validated = $request->validated();
@@ -31,6 +45,7 @@ class AccessTokenController extends Controller
         ],401);
 
     }
+
     public function destroy($token = null)
     {
         $user = Auth::guard('sanctum')->user();

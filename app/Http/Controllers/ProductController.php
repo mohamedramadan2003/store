@@ -39,13 +39,15 @@ class ProductController extends Controller
                     $validated['image'] = $imagePath;
                                                  }
             $product =  Product::create($validated);
-            $no = $user->notify(new CreateProductNotification($product));
-             return response()->json([
+           $z =  event('product.created',$product,$user);
+
+            return response()->json([
                 'massage' => 'notification done ',
-               'notifications'=> $user->notifications()->latest()->first(),
-             'product'=>$product
+                'z0'=> $user->notifications() ,
+                'product'=>$product
              ]
                 , 201);
+
 
     }
 

@@ -25,8 +25,10 @@ Route::delete('/products', [ProductController::class, 'destroy']);
 
 
   // auth and logout
+
+Route::post('register',[AccessTokenController::class , 'register']);
 Route::post('/auth-access-token' , [AccessTokenController::class , 'store'])
 ->middleware('guest:sanctum');
- Route::delete('/logout/{token?}', [AccessTokenController::class, 'destroy'])
+ Route::delete('ogout/{token?}', [AccessTokenController::class, 'destroy'])
  ->middleware('auth:sanctum');
 
