@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+
 Route::get('/home', [HomeController::class , 'index']);
 Route::middleware('auth:sanctum')->group(function () {
     //products
@@ -21,14 +19,24 @@ Route::get('/products/{slug}', [ProductController::class, 'show']);
 Route::delete('/products', [ProductController::class, 'destroy']);
 // carts
  Route::apiResource('carts',CartController::class);
-});
 
+ //catgory
+
+
+});
 
   // auth and logout
 
-Route::post('register',[AccessTokenController::class , 'register']);
+Route::post('/register',[AccessTokenController::class , 'register'])->middleware('guest:sanctum');
 Route::post('/auth-access-token' , [AccessTokenController::class , 'store'])
 ->middleware('guest:sanctum');
- Route::delete('ogout/{token?}', [AccessTokenController::class, 'destroy'])
+ Route::delete('logout/{token?}', [AccessTokenController::class, 'destroy'])
  ->middleware('auth:sanctum');
 
+Route::prefix('admin')->group(function (){
+Route::post('/register',[AccessTokenController::class , 'register'])->middleware('guest:sanctum');
+Route::post('/auth-access-token' , [AccessTokenController::class , 'store'])
+->middleware('guest:sanctum');
+ Route::delete('logout/{token?}', [AccessTokenController::class, 'destroy'])
+ ->middleware('auth:sanctum');
+});
