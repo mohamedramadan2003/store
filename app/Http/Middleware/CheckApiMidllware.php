@@ -15,13 +15,7 @@ class CheckApiMidllware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $token = $request->header('x-api-key');
-        if($token !== config('app.api_token'))
-        {
-            return response()->json([
-                'massage' => 'not found api '
-            ],400);
-        }
+      
         return $next($request);
     }
 }

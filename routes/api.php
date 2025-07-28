@@ -9,7 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 
 
-Route::get('/home', [HomeController::class , 'index']);
+Route::post('/home', [HomeController::class , 'index'])->middleware('guest:sanctum');
 Route::middleware('auth:sanctum')->group(function () {
     //products
 Route::get('/products', [ProductController::class, 'index']);
