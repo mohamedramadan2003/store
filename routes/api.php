@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Api\AccessTokenController;
-use App\Http\Controllers\Font\CartController;
 use Illuminate\Http\Request;
 use App\Http\Resources\HomeResource;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\Font\CartController;
+use App\Http\Controllers\Api\AccessTokenController;
 
 
 Route::post('/home', [HomeController::class , 'index'])->middleware('guest:sanctum');
@@ -20,6 +21,7 @@ Route::delete('/products', [ProductController::class, 'destroy']);
 // carts
  Route::apiResource('carts',CartController::class);
 
+ Route::post('/convert-price' ,  [CurrencyController::class, 'convert']);
  //catgory
 
 
