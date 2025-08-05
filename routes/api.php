@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\Font\CartController;
 use App\Http\Controllers\Api\AccessTokenController;
+use App\Http\Controllers\Api\PaymentController;
 
 
 Route::post('/home', [HomeController::class , 'index'])->middleware('guest:sanctum');
@@ -24,6 +25,9 @@ Route::delete('/products', [ProductController::class, 'destroy']);
  Route::post('/convert-price' ,  [CurrencyController::class, 'convert']);
  //catgory
 
+
+Route::post('/payment/pay', [PaymentController::class, 'pay']);
+Route::post('/payment/verify', [PaymentController::class, 'verify']);
 
 });
 
