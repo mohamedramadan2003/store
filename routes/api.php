@@ -7,8 +7,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\Font\CartController;
-use App\Http\Controllers\Api\AccessTokenController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\SocialLoginController;
+use App\Http\Controllers\Api\AccessTokenController;
 
 
 Route::post('/home', [HomeController::class , 'index'])->middleware('guest:sanctum');
@@ -45,4 +46,10 @@ Route::post('/auth-access-token' , [AccessTokenController::class , 'store'])
 ->middleware('guest:sanctum');
  Route::delete('logout/{token?}', [AccessTokenController::class, 'destroy'])
  ->middleware('auth:sanctum');
+
+
+ //social login
+ Route::get('/auth/{provider}/redirect' ,[SocialLoginController::class , 'redirect']);
+  Route::get('/auth/{provider}/callback',[SocialLoginController::class , 'callback'] );
+
 });
