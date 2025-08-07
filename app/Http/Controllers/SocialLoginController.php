@@ -25,15 +25,19 @@ class SocialLoginController extends Controller
             ['email' => $socialUser->getEmail()],
             [
                 'name' => $socialUser->getName(),
-                'password' => Hash::make(Str::random(24)), 
+                'password' => Hash::make(Str::random(24)),
             ]
         );
 
         $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json([
-            'user' => $user,
-            'token' => $token
-        ]);
+        return response()
+    ->json(['user' => $user])
+    ->withCookie(cookie(
+        'auth_token',
+        $token,
+        60 * 24 * 7,
+        null, null, true, true, false, 'Strict'
+    ));
     }
 }

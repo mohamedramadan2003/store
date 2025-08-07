@@ -40,6 +40,13 @@ Route::post('/auth-access-token' , [AccessTokenController::class , 'store'])
  Route::delete('logout/{token?}', [AccessTokenController::class, 'destroy'])
  ->middleware('auth:sanctum');
 
+ //social login users
+ Route::get('/auth/{provider}/redirect' ,[SocialLoginController::class , 'redirect']);
+  Route::get('/auth/{provider}/callback',[SocialLoginController::class , 'callback'] );
+Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
+    return $request->user();
+});
+
 Route::prefix('admin')->group(function (){
 Route::post('/register',[AccessTokenController::class , 'register'])->middleware('guest:sanctum');
 Route::post('/auth-access-token' , [AccessTokenController::class , 'store'])
@@ -48,7 +55,7 @@ Route::post('/auth-access-token' , [AccessTokenController::class , 'store'])
  ->middleware('auth:sanctum');
 
 
- //social login
+ //social login admin
  Route::get('/auth/{provider}/redirect' ,[SocialLoginController::class , 'redirect']);
   Route::get('/auth/{provider}/callback',[SocialLoginController::class , 'callback'] );
 
