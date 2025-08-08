@@ -5,6 +5,7 @@ use App\Http\Resources\HomeResource;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\Font\CartController;
 use App\Http\Controllers\Api\PaymentController;
@@ -26,10 +27,12 @@ Route::delete('/products', [ProductController::class, 'destroy']);
  Route::post('/convert-price' ,  [CurrencyController::class, 'convert']);
  //catgory
 
-
+// payment
 Route::post('/payment/pay', [PaymentController::class, 'pay']);
 Route::post('/payment/verify', [PaymentController::class, 'verify']);
 
+// category
+Route::apiResource('/categories',CategoryController::class);
 });
 
   // auth and logout

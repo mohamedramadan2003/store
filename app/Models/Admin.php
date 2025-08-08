@@ -13,5 +13,17 @@ class Admin extends Authenticatable
     protected $guard = 'admin-api';
 
     protected $fillable = ['name','email','password','phone_number','super_admin','status'];
+ protected $hidden = [
+        'password',
+        'remember_token',
+        'id',
+    ];
 
+     protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
 }
